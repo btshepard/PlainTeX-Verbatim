@@ -1,0 +1,67 @@
+% \begindisplay ... \enddisplay for displaying text
+\def\begindisplay{\begingroup\par\ \par\hfil}
+\def\enddisplay{\hfil\par\ \par\endgroup}
+
+% \def\begindisplay{\par\ \par\begingroup\leftskip=0pt plus 1fil\rightskip=\leftskip\parindent=0pt\parfillskip=0pt}
+% \def\enddisplay{\par\ \par\endgroup}
+
+% |...| and ||...|| for inline/display verbatim
+% \def\showspaces{\catcode`\ =12\relax}
+\newif\ifblankline
+\def\obeyblanklines{\begingroup\lccode`~=`\^^M\relax\lowercase{\endgroup\def~}{\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}\catcode`\^^M=\active\everypar{\blanklinefalse}}
+\catcode`|=13
+\newif\ifvsp\vsptrue
+\def\showspaces{\begingroup\lccode`~=` \lowercase{\endgroup\obeyspaces\let~=\ \relax}}
+\def\makeinnocent#1{\catcode`#1=12\relax}
+\def|{\begingroup\let\do\makeinnocent\dospecials\ifvsp\obeyspaces\fi\obeylines\startverb}
+\def\startverb#1{\ifx|#1\relax\catcode`|=12\relax\expandafter\displayverb\else\inlineverb#1\fi}
+\long\def\inlineverb#1|{\tt#1\endgroup\vsptrue}
+\edef\tmp{\long\def\noexpand\displayverb##1\string|\string|}
+\tmp{\begindisplay\showspaces\obeyblanklines\par\vskip-\baselineskip\tt#1\enddisplay\endgroup\vsptrue}
+
+% @|...| and @||...|| for inline/display verbatim with visible spaces
+% \def\atchar{\char`\@\relax}
+% \catcode`\@=13
+% \def @#1{\ifx|#1\expandafter\exclm\else\atchar#1\fi}
+% \def\exclm{\vspfalse|}
+
+\def\gobble#1{}
+\def\atchar{\char`\@\relax}
+\catcode`\@=13
+\begingroup
+\gdef @{\futurelet\nextchar\doat}
+\gdef\doat{\ifx\^^M\nextchar\expandafter\gobble\else\ifx|\nextchar\expandafter\vspfalse\else\atchar\fi\fi}
+\endgroup
+
+\centerline{\font\large=cmr10 at 18pt \large Plain\TeX\ Verbatim}
+\vskip1.5\baselineskip{}
+\centerline{Benjamin T. Shepard}
+\vskip1ex{}
+\centerline{June 29, 2022}
+\vskip1.5\baselineskip{}
+
+An inline verbatim such as\ |this is \inline| can be made with the string {\tt\string|...\string|}. If visible spaces are desired, use {\tt\string@\string|...\string|} instead, which will produce @|this is \inline|. A display verbatim such as
+||this is \display||
+can be made with {\tt\string|\string|...\string|\string|}. If visible spaces are desired, use {\tt\string@\string|\string|...\string|\string|} instead, which will produce
+@||this is \display.||
+Every normal \TeX\ character (except {\tt\string|}) as well as all of the special characters can be used inside this environment, as shown in the following example:
+||!$@$#%^&*()-+=\ /.,;'`~th@<is$ ]\bye *is{ #a '`1\rho > *\tes<t* \undefined .??[" ||
+If the character The character {\tt\string@} is able to be used regularly, and can also be used at the end of lines. Code such as
+||1 this is a t@st
+2 @
+3
+4 this is a test@
+5
+6 \bye||
+will compile as expected. These verbatim environments also obey spaces, lines, and blank lines.
+
+||void dfs(int p){
+    if(o[p]) return;
+    o[p]=1;
+    c[p] = t++;
+    for(int i=0; i<s[p].size(); ++i){
+        dfs(s[p][i]);
+    }
+}||
+
+\bye

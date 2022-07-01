@@ -1,0 +1,7 @@
+verbatim.tex:
+    ☐ fix centering of display (left align in center)
+    ☐ fix spacing if || are on separate lines from text
+    ✔ get @ to gobble eol as parameter @done(06/29 18:14)
+    ☐ figure out a better way to do \edef\tmp
+    ✔ for some reason @ doesn't change spaces anymore? @done(06/29 17:41)
+    ☐ etoolbox \patchcmd
