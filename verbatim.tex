@@ -68,7 +68,16 @@ Normally, the pipe character {\tt\string|} can only be used inside the display v
 \vskip-\baselineskip
 There is also the macro |\pipe| which expands to
 || macro: -> \bgroup\string|\egroup ||
-displaying the literal {\tt\string|}. Of course, this cannot be used inside the {\tt\pipe...\pipe} or {\tt\pipe\pipe...\pipe\pipe} environments. 
+displaying the literal {\tt\string|}. It can be used to, for example, execute
+|| {\tt\pipe\pipe...\pipe\pipe} ||
+versus
+\begindisplay
+\tt
+\makepipeother
+\string\makepipeother\string{\string\tt||...||\string}\string\makepipeactive
+\makepipeactive
+\enddisplay
+which will each display {\tt\pipe\pipe...\pipe\pipe}. Of course, this macro cannot be used inside the {\tt\pipe...\pipe} or {\tt\pipe\pipe...\pipe\pipe} environments.
 
 The character {\tt @} is able to be used regularly, and can also be used at the end of lines. Code such as
 ||1 this is a t@st
