@@ -8,4 +8,4 @@ verbatim.tex:
     ☐ create \begindisplayverb and \enddisplayverb for ||...||
     ✔ create \makepipeletter and \makepipeactive @done(07/01 03:26)
     ☐ etoolbox \patchcmd
-    ☐ redo lines 60-68 with \makepipeother and \makepipeactive command example
+    ✔ redo lines 60-68 with \makepipeother and \makepipeactive command example @done(07/01 04:13)
