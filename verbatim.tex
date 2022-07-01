@@ -54,30 +54,19 @@ can be made with {\tt\pipe\pipe...\pipe\pipe}. If visible spaces are desired, us
 @||this is \display.||
 Every normal \TeX\ character (except {\tt\string|}) as well as all of the special characters can be used inside this environment, as shown in the following example:
 ||!$@$#%^&*()-+=\ /.,;'`~th@<is$ ]\bye *is{ #a '`1\rho > *\tes<t* \undefined .??[" ||
-Normally, the pipe character {\tt\string|} can only be used inside the display verbatim {\tt\string|\string|...\string|\string|}. However, the macros |\makepipeother| and |\makepipeactive| turn the character {\tt\string|} into a normal character and back into an active character, respectively. This can be used as follows:\vskip-\baselineskip
-\begindisplay
-\tt
-\makepipeother
-\obeyblanklines
-1 \string\makepipeother
-2 || this is a | pipe ||
-3 \string\makepipeactive
-\disobeyblanklines
-\makepipeactive
-\enddisplay
-\vskip-\baselineskip
+Normally, the pipe character {\tt\string|} can only be used inside the display verbatim {\tt\string|\string|...\string|\string|}. However, the macros |\makepipeother| and |\makepipeactive| turn the character {\tt\string|} into a normal character and back into an active character, respectively. 
 There is also the macro |\pipe| which expands to
 || macro: -> \bgroup\string|\egroup ||
-displaying the literal {\tt\string|}. It can be used to, for example, execute
-|| {\tt\pipe\pipe...\pipe\pipe} ||
-versus
+displaying the literal {\tt\string|}. These macros can be used to, for example, execute
+|| {\tt th\pipe{}s is a pipe} ||
+or
 \begindisplay
 \tt
 \makepipeother
-\string\makepipeother\string{\string\tt||...||\string}\string\makepipeactive
+\string\makepipeother\string{\string\tt\ th\string\pipe\string{\string}s is a pipe\string}\string\makepipeactive
 \makepipeactive
 \enddisplay
-which will each display {\tt\pipe\pipe...\pipe\pipe}. Of course, this macro cannot be used inside the {\tt\pipe...\pipe} or {\tt\pipe\pipe...\pipe\pipe} environments.
+which will each display {\tt th\pipe{}s is a pipe}. Of course, these macros cannot be used inside the {\tt\pipe...\pipe} or {\tt\pipe\pipe...\pipe\pipe} environments, as they will be treated as strings of catcode 12 characters.
 
 The character {\tt @} is able to be used regularly, and can also be used at the end of lines. Code such as
 ||1 this is a t@st
