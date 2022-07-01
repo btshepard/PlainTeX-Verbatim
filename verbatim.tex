@@ -9,6 +9,7 @@
 % \def\showspaces{\catcode`\ =12\relax}
 \newif\ifblankline
 \def\obeyblanklines{\begingroup\lccode`~=`\^^M\relax\lowercase{\endgroup\def~}{\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}\catcode`\^^M=\active\everypar{\blanklinefalse}}
+\def\disobeyblanklines{\catcode`\^^M=5\relax}
 \catcode`|=13
 \newif\ifvsp\vsptrue
 \def\showspaces{\begingroup\lccode`~=` \lowercase{\endgroup\obeyspaces\let~=\ \relax}}
@@ -33,20 +34,43 @@
 \gdef\doat{\ifx\^^M\nextchar\expandafter\gobble\else\ifx|\nextchar\expandafter\vspfalse\else\atchar\fi\fi}
 \endgroup
 
+\def\makepipeother{\catcode`|=12\relax}
+\def\makepipeactive{\catcode`|=13\relax}
+
+\def\pipe{\bgroup\string|\egroup}
+
 \centerline{\font\large=cmr10 at 18pt \large Plain\TeX\ Verbatim}
 \vskip1.5\baselineskip{}
 \centerline{Benjamin T. Shepard}
 \vskip1ex{}
 \centerline{June 29, 2022}
 \vskip1.5\baselineskip{}
+\openup0.4ex
 
-An inline verbatim such as\ |this is \inline| can be made with the string {\tt\string|...\string|}. If visible spaces are desired, use {\tt\string@\string|...\string|} instead, which will produce @|this is \inline|. A display verbatim such as
+An inline verbatim such as\ |this is \inline| can be made with the code {\tt\pipe...\pipe}. If visible spaces are desired, use 
+{\tt @\string|...\string|} instead, which will produce @|this is \inline|. A display verbatim such as
 ||this is \display||
-can be made with {\tt\string|\string|...\string|\string|}. If visible spaces are desired, use {\tt\string@\string|\string|...\string|\string|} instead, which will produce
+can be made with {\tt\pipe\pipe...\pipe\pipe}. If visible spaces are desired, use {\tt @\pipe\pipe...\pipe\pipe} instead, which will produce
 @||this is \display.||
 Every normal \TeX\ character (except {\tt\string|}) as well as all of the special characters can be used inside this environment, as shown in the following example:
 ||!$@$#%^&*()-+=\ /.,;'`~th@<is$ ]\bye *is{ #a '`1\rho > *\tes<t* \undefined .??[" ||
-If the character The character {\tt\string@} is able to be used regularly, and can also be used at the end of lines. Code such as
+Normally, the pipe character {\tt\string|} can only be used inside the display verbatim {\tt\string|\string|...\string|\string|}. However, the macros |\makepipeother| and |\makepipeactive| turn the character {\tt\string|} into a normal character and back into an active character, respectively. This can be used as follows:\vskip-\baselineskip
+\begindisplay
+\tt
+\makepipeother
+\obeyblanklines
+1 \string\makepipeother
+2 || this is a | pipe ||
+3 \string\makepipeactive
+\disobeyblanklines
+\makepipeactive
+\enddisplay
+\vskip-\baselineskip
+There is also the macro |\pipe| which expands to
+|| macro: -> \bgroup\string|\egroup ||
+displaying the literal {\tt\string|}. Of course, this cannot be used inside the {\tt\pipe...\pipe} or {\tt\pipe\pipe...\pipe\pipe} environments. 
+
+The character {\tt @} is able to be used regularly, and can also be used at the end of lines. Code such as
 ||1 this is a t@st
 2 @
 3
@@ -54,14 +78,5 @@ If the character The character {\tt\string@} is able to be used regularly, and c
 5
 6 \bye||
 will compile as expected. These verbatim environments also obey spaces, lines, and blank lines.
-
-||void dfs(int p){
-    if(o[p]) return;
-    o[p]=1;
-    c[p] = t++;
-    for(int i=0; i<s[p].size(); ++i){
-        dfs(s[p][i]);
-    }
-}||
 
 \bye

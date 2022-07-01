@@ -4,4 +4,7 @@ verbatim.tex:
     ✔ get @ to gobble eol as parameter @done(06/29 18:14)
     ☐ figure out a better way to do \edef\tmp
     ✔ for some reason @ doesn't change spaces anymore? @done(06/29 17:41)
+    ☐ create \bverb and \everb for |...|
+    ☐ create \begindisplayverb and \enddisplayverb for ||...||
+    ✔ create \makepipeletter and \makepipeactive @done(07/01 03:26)
     ☐ etoolbox \patchcmd
