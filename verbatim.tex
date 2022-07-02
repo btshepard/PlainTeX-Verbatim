@@ -1,32 +1,44 @@
-% \begindisplay ... \enddisplay for displaying text
+% display environment
 \def\begindisplay{\begingroup\par\ \par\hfil}
 \def\enddisplay{\hfil\par\ \par\endgroup}
 
 % \def\begindisplay{\par\ \par\begingroup\leftskip=0pt plus 1fil\rightskip=\leftskip\parindent=0pt\parfillskip=0pt}
 % \def\enddisplay{\par\ \par\endgroup}
 
-% |...| and ||...|| for inline/display verbatim
-% \def\showspaces{\catcode`\ =12\relax}
-\newif\ifblankline
-\def\obeyblanklines{\begingroup\lccode`~=`\^^M\relax\lowercase{\endgroup\def~}{\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}\catcode`\^^M=\active\everypar{\blanklinefalse}}
-\def\disobeyblanklines{\catcode`\^^M=5\relax}
-\catcode`|=13
-\newif\ifvsp\vsptrue
-\def\showspaces{\begingroup\lccode`~=` \lowercase{\endgroup\obeyspaces\let~=\ \relax}}
-\def\makeinnocent#1{\catcode`#1=12\relax}
-\def|{\begingroup\let\do\makeinnocent\dospecials\ifvsp\obeyspaces\fi\obeylines\startverb}
-\def\startverb#1{\ifx|#1\relax\catcode`|=12\relax\expandafter\displayverb\else\inlineverb#1\fi}
-\long\def\inlineverb#1|{\tt#1\endgroup\vsptrue}
-\edef\tmp{\long\def\noexpand\displayverb##1\string|\string|}
-\tmp{\begindisplay\showspaces\obeyblanklines\par\vskip-\baselineskip\tt#1\enddisplay\endgroup\vsptrue}
-
-% @|...| and @||...|| for inline/display verbatim with visible spaces
-% \def\atchar{\char`\@\relax}
-% \catcode`\@=13
-% \def @#1{\ifx|#1\expandafter\exclm\else\atchar#1\fi}
-% \def\exclm{\vspfalse|}
-
+% boilerplate
 \def\gobble#1{}
+\def\makeinnocent#1{\catcode`#1=12\relax}
+
+% safety macros
+\def\makepipeother{\catcode`|=12\relax}
+\def\makepipeactive{\catcode`|=13\relax}
+\def\pipe{\bgroup\string|\egroup}
+
+% boolean variables
+\newif\ifblankline
+\newif\ifvsp\vsptrue
+
+% obey/disobey blank lines commands
+\def\obeyblanklines{\begingroup\lccode`~=`\^^M\relax\lowercase{\endgroup\def~}{\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}\catcode`\^^M=13\everypar{\blanklinefalse}}
+\def\disobeyblanklines{\catcode`\^^M=5\relax}
+
+% show spaces command
+\def\showspaces{\begingroup\lccode`~=` \lowercase{\endgroup\obeyspaces\let~=\ \relax}}
+
+% define |...| and ||...|| verbatim environments
+\makepipeactive
+\def|{\begingroup\let\do\makeinnocent\dospecials\ifvsp\obeyspaces\fi\obeylines\doverbatim}
+\def\doverbatim#1{\ifx|#1\relax\catcode`|=12\relax\expandafter\displayverb\else\inlineverb#1\fi}
+
+% |...| environment
+\long\def\inlineverb#1|{\tt#1\endgroup\vsptrue}
+
+% ||...|| environment
+\makepipeother
+\long\def\displayverb#1||{\begindisplay\showspaces\obeyblanklines\par\vskip-\baselineskip\relax\tt#1\enddisplay\endgroup\vsptrue}
+\makepipeactive
+
+% @|...| and @||...|| for visible spaces
 \def\atchar{\char`\@\relax}
 \catcode`\@=13
 \begingroup
@@ -34,10 +46,7 @@
 \gdef\doat{\ifx\^^M\nextchar\expandafter\gobble\else\ifx|\nextchar\expandafter\vspfalse\else\atchar\fi\fi}
 \endgroup
 
-\def\makepipeother{\catcode`|=12\relax}
-\def\makepipeactive{\catcode`|=13\relax}
-
-\def\pipe{\bgroup\string|\egroup}
+% 
 
 \centerline{\font\large=cmr10 at 18pt \large Plain\TeX\ Verbatim}
 \vskip1.5\baselineskip{}
