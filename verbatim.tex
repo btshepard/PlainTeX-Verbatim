@@ -18,11 +18,9 @@
 \newif\ifblankline
 \newif\ifvsp\vsptrue
 
-% obey/disobey blank lines commands
+% obey spaces/lines/blank lines
 \def\obeyblanklines{\begingroup\lccode`~=`\^^M\relax\lowercase{\endgroup\def~}{\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}\catcode`\^^M=13\everypar{\blanklinefalse}}
 \def\disobeyblanklines{\catcode`\^^M=5\relax}
-
-% show spaces command
 \def\showspaces{\begingroup\lccode`~=` \lowercase{\endgroup\obeyspaces\let~=\ \relax}}
 
 % define |...| and ||...|| verbatim environments
@@ -35,6 +33,7 @@
 
 % ||...|| environment
 \makepipeother
+% \makeinnocent{|} ??
 \long\def\displayverb#1||{\begindisplay\showspaces\obeyblanklines\par\vskip-\baselineskip\relax\tt#1\enddisplay\endgroup\vsptrue}
 \makepipeactive
 
