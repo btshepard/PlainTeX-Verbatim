@@ -16,6 +16,7 @@
 \def\pipe{\bgroup\string|\egroup}
 
 % obey spaces/lines/blank lines
+\def\showspaces{\makeinnocent{ }}
 \newif\ifblankline
 \def\obeyblanklines{%
     \begingroup
@@ -25,20 +26,14 @@
     \makeactive{\^^M}
     \everypar{\blanklinefalse}%
 }
-\def\showspaces{%
-    \begingroup
-    \lccode`~=` \relax
-    \lowercase{\endgroup\obeyspaces\let~=\ \relax}%
-}
 
 % define |...| and ||...|| verbatim environments
 \newif\ifvisiblespaces
 \makepipeactive
 \def|{%
     \begingroup
-    \let\do\makeinnocent
-    \dospecials
-    \ifvisiblespaces\else\obeyspaces\fi
+    \let\do\makeinnocent\dospecials
+    \ifvisiblespaces\showspaces\else\obeyspaces\fi
     \obeylines
     \doverbatim%
 }
@@ -57,7 +52,6 @@
 \makepipeother
 \long\def\displayverb#1||{%
     \begindisplay
-    \showspaces
     \obeyblanklines
     \par\vskip-\baselineskip\relax
     \tt#1%
@@ -103,7 +97,7 @@ Every normal \TeX\ character (except {\tt\pipe}) as well as all of the special c
 ||!$@$#%^&*()-+=\ /.,;'`~th@<is$ ]\bye *is{ #a '`1\rho > *\tes<t* \undefined .??["||
 Normally, the pipe character {\tt\pipe} can only be used inside the display verbatim {\tt\pipe\pipe...\pipe\pipe}. However, the macros |\makepipeother| and |\makepipeactive| turn the character {\tt\pipe} into an innocent character and back into an active character, respectively. This allows for use of the pipe literal in horizontal mode.
 There is also the macro |\pipe| which expands to
-|| macro: -> \bgroup\string|\egroup ||
+|| \bgroup\string|\egroup ||
 displaying the literal {\tt\pipe}. These macros can be used to, for example, execute
 ||{\tt th\pipe{}s is a pipe}||
 or
@@ -123,16 +117,5 @@ The character {\tt @} is able to be used regularly, and can also be used at the 
 5
 6 \bye||
 will compile as expected. These verbatim environments also obey spaces, lines, and blank lines.
-
-\vfill\eject
-
-|| sdf sdf  sd f || sdf kjsd f
-sdf
-@|| sdf sdf  sd f || sdfd 
-
-sdf
-|| sdf sdf  sd f ||
-
-
 
 \bye
