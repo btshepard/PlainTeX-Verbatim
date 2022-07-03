@@ -20,21 +20,54 @@
 \newif\ifvsp\vsptrue
 
 % obey spaces/lines/blank lines
-\def\obeyblanklines{\begingroup\lccode`~=`\^^M\relax\lowercase{\endgroup\def~}{\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}\makeactive{\^^M}\everypar{\blanklinefalse}}
+\def\obeyblanklines{%
+    \begingroup
+    \lccode`~=`\^^M\relax
+    \lowercase{\endgroup\def~}%
+    {\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}
+    \makeactive{\^^M}
+    \everypar{\blanklinefalse}%
+}
 \def\disobeyblanklines{\catcode`\^^M=5\relax}
-\def\showspaces{\begingroup\lccode`~=` \lowercase{\endgroup\obeyspaces\let~=\ \relax}}
+\def\showspaces{%
+    \begingroup
+    \lccode`~=` \relax
+    \lowercase{\endgroup\obeyspaces\let~=\ \relax}%
+}
 
 % define |...| and ||...|| verbatim environments
 \makepipeactive
-\def|{\begingroup\let\do\makeinnocent\dospecials\ifvsp\obeyspaces\fi\obeylines\doverbatim}
-\def\doverbatim#1{\ifx|#1\relax\makepipeother\expandafter\displayverb\else\inlineverb#1\fi}
+\def|{%
+    \begingroup
+    \let\do\makeinnocent
+    \dospecials
+    \ifvsp\obeyspaces\fi
+    \obeylines
+    \doverbatim%
+}
+\def\doverbatim#1{%
+    \ifx|#1
+        \makepipeother\expandafter\displayverb
+    \else
+        \inlineverb#1\relax
+    \fi%
+}
 
 % |...| environment
 \long\def\inlineverb#1|{\tt#1\endgroup\vsptrue}
 
 % ||...|| environment
 \makepipeother
-\long\def\displayverb#1||{\begindisplay\showspaces\obeyblanklines\par\vskip-\baselineskip\relax\tt#1\enddisplay\endgroup\vsptrue}
+\long\def\displayverb#1||{%
+    \begindisplay
+    \showspaces
+    \obeyblanklines
+    \par\vskip-\baselineskip\relax
+    \tt#1%
+    \enddisplay
+    \endgroup
+    \vsptrue%
+}
 \makepipeactive
 
 % @|...| and @||...|| for visible spaces
@@ -42,11 +75,20 @@
 \makeactive{@}
 \begingroup
 \gdef @{\futurelet\nextchar\doat}
-\gdef\doat{\ifx\^^M\nextchar\expandafter\gobble\else\ifx|\nextchar\expandafter\vspfalse\else\atchar\fi\fi}
+\gdef\doat{%
+    \ifx\^^M\nextchar
+        \expandafter\gobble%
+    \else
+        \ifx|\nextchar
+            \expandafter\vspfalse%
+        \else
+            \atchar
+        \fi
+    \fi%
+}
 \endgroup
 
 % usage comments
-
 \centerline{\font\large=cmr10 at 18pt \large Plain\TeX\ Verbatim}
 \vskip1.5\baselineskip{}
 \centerline{Benjamin T. Shepard}
@@ -84,5 +126,22 @@ The character {\tt @} is able to be used regularly, and can also be used at the 
 5
 6 \bye||
 will compile as expected. These verbatim environments also obey spaces, lines, and blank lines.
+
+\vfill\eject
+
+\obeyblanklines
+
+alkjsdf
+a
+
+adfs
+
+afd
+
+
+
+df
+
+
 
 \bye

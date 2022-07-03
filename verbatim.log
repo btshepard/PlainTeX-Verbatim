@@ -1,15 +1,15 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdftex 2021.7.16)  2 JUL 2022 22:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdftex 2021.7.16)  2 JUL 2022 22:48
 entering extended mode
  %&-line parsing enabled.
 **verbatim.tex
 (./verbatim.tex [1{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pd
-ftex.map}] )</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmr10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-tt10.pfb>
-Output written on verbatim.pdf (1 page, 38912 bytes).
+ftex.map}] [2] )</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmr10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmtt10.pfb>
+Output written on verbatim.pdf (2 pages, 39143 bytes).
 PDF statistics:
- 16 PDF objects out of 1000 (max. 8388607)
- 10 compressed objects within 1 object stream
+ 19 PDF objects out of 1000 (max. 8388607)
+ 12 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
