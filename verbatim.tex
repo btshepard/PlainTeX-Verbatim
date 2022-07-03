@@ -15,11 +15,8 @@
 \def\makepipeactive{\makeactive{|}}
 \def\pipe{\bgroup\string|\egroup}
 
-% boolean variables
-\newif\ifblankline
-\newif\ifvsp\vsptrue
-
 % obey spaces/lines/blank lines
+\newif\ifblankline
 \def\obeyblanklines{%
     \begingroup
     \lccode`~=`\^^M\relax
@@ -28,7 +25,6 @@
     \makeactive{\^^M}
     \everypar{\blanklinefalse}%
 }
-\def\disobeyblanklines{\catcode`\^^M=5\relax}
 \def\showspaces{%
     \begingroup
     \lccode`~=` \relax
@@ -36,12 +32,13 @@
 }
 
 % define |...| and ||...|| verbatim environments
+\newif\ifvisiblespaces
 \makepipeactive
 \def|{%
     \begingroup
     \let\do\makeinnocent
     \dospecials
-    \ifvsp\obeyspaces\fi
+    \ifvisiblespaces\else\obeyspaces\fi
     \obeylines
     \doverbatim%
 }
@@ -54,7 +51,7 @@
 }
 
 % |...| environment
-\long\def\inlineverb#1|{\tt#1\endgroup\vsptrue}
+\long\def\inlineverb#1|{\tt#1\endgroup\visiblespacesfalse}
 
 % ||...|| environment
 \makepipeother
@@ -66,7 +63,7 @@
     \tt#1%
     \enddisplay
     \endgroup
-    \vsptrue%
+    \visiblespacesfalse%
 }
 \makepipeactive
 
@@ -80,7 +77,7 @@
         \expandafter\gobble%
     \else
         \ifx|\nextchar
-            \expandafter\vspfalse%
+            \expandafter\visiblespacestrue%
         \else
             \atchar
         \fi
@@ -129,18 +126,12 @@ will compile as expected. These verbatim environments also obey spaces, lines, a
 
 \vfill\eject
 
-\obeyblanklines
+|| sdf sdf  sd f || sdf kjsd f
+sdf
+@|| sdf sdf  sd f || sdfd 
 
-alkjsdf
-a
-
-adfs
-
-afd
-
-
-
-df
+sdf
+|| sdf sdf  sd f ||
 
 
 
