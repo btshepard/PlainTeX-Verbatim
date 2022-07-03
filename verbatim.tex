@@ -1,14 +1,14 @@
+% boilerplate
+\def\gobble#1{}
+\def\makeinnocent#1{\catcode`#1=12\relax}
+\def\makeactive#1{\catcode`#1=13\relax}
+
 % display environment
 \def\begindisplay{\begingroup\par\ \par\hfil}
 \def\enddisplay{\hfil\par\ \par\endgroup}
 
 % \def\begindisplay{\par\ \par\begingroup\leftskip=0pt plus 1fil\rightskip=\leftskip\parindent=0pt\parfillskip=0pt}
 % \def\enddisplay{\par\ \par\endgroup}
-
-% boilerplate
-\def\gobble#1{}
-\def\makeinnocent#1{\catcode`#1=12\relax}
-\def\makeactive#1{\catcode`#1=13\relax}
 
 % safety macros
 \def\makepipeother{\makeinnocent{|}}
