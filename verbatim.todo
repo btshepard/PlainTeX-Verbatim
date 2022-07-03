@@ -1,7 +1,7 @@
 verbatim.tex:
     ☐ fix centering of display (left align in center)
     ☐ fix spacing if || are on separate lines from text
-    ☐ \makeinnocent{|} versus \makepipeother?
+    ✔ \makeinnocent{|} versus \makepipeother? @done(07/02 22:01)
     ☐ change how macro lines are spread out
     ✔ get @ to gobble eol as parameter @done(06/29 18:14)
     ✔ figure out a better way to do \edef\tmp @done(07/02 03:53)

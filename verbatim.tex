@@ -8,10 +8,11 @@
 % boilerplate
 \def\gobble#1{}
 \def\makeinnocent#1{\catcode`#1=12\relax}
+\def\makeactive#1{\catcode`#1=13\relax}
 
 % safety macros
-\def\makepipeother{\catcode`|=12\relax}
-\def\makepipeactive{\catcode`|=13\relax}
+\def\makepipeother{\makeinnocent{|}}
+\def\makepipeactive{\makeactive{|}}
 \def\pipe{\bgroup\string|\egroup}
 
 % boolean variables
@@ -19,33 +20,32 @@
 \newif\ifvsp\vsptrue
 
 % obey spaces/lines/blank lines
-\def\obeyblanklines{\begingroup\lccode`~=`\^^M\relax\lowercase{\endgroup\def~}{\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}\catcode`\^^M=13\everypar{\blanklinefalse}}
+\def\obeyblanklines{\begingroup\lccode`~=`\^^M\relax\lowercase{\endgroup\def~}{\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}\makeactive{\^^M}\everypar{\blanklinefalse}}
 \def\disobeyblanklines{\catcode`\^^M=5\relax}
 \def\showspaces{\begingroup\lccode`~=` \lowercase{\endgroup\obeyspaces\let~=\ \relax}}
 
 % define |...| and ||...|| verbatim environments
 \makepipeactive
 \def|{\begingroup\let\do\makeinnocent\dospecials\ifvsp\obeyspaces\fi\obeylines\doverbatim}
-\def\doverbatim#1{\ifx|#1\relax\catcode`|=12\relax\expandafter\displayverb\else\inlineverb#1\fi}
+\def\doverbatim#1{\ifx|#1\relax\makepipeother\expandafter\displayverb\else\inlineverb#1\fi}
 
 % |...| environment
 \long\def\inlineverb#1|{\tt#1\endgroup\vsptrue}
 
 % ||...|| environment
 \makepipeother
-% \makeinnocent{|} ??
 \long\def\displayverb#1||{\begindisplay\showspaces\obeyblanklines\par\vskip-\baselineskip\relax\tt#1\enddisplay\endgroup\vsptrue}
 \makepipeactive
 
 % @|...| and @||...|| for visible spaces
 \def\atchar{\char`\@\relax}
-\catcode`\@=13
+\makeactive{@}
 \begingroup
 \gdef @{\futurelet\nextchar\doat}
 \gdef\doat{\ifx\^^M\nextchar\expandafter\gobble\else\ifx|\nextchar\expandafter\vspfalse\else\atchar\fi\fi}
 \endgroup
 
-% 
+% usage comments
 
 \centerline{\font\large=cmr10 at 18pt \large Plain\TeX\ Verbatim}
 \vskip1.5\baselineskip{}
@@ -61,12 +61,12 @@ An inline verbatim such as\ |this is \inline| can be made with the code {\tt\pip
 can be made with {\tt\pipe\pipe...\pipe\pipe}. If visible spaces are desired, use {\tt @\pipe\pipe...\pipe\pipe} instead, which will produce
 @||this is \display.||
 Every normal \TeX\ character (except {\tt\pipe}) as well as all of the special characters can be used inside this environment, as shown in the following example:
-||!$@$#%^&*()-+=\ /.,;'`~th@<is$ ]\bye *is{ #a '`1\rho > *\tes<t* \undefined .??[" ||
-Normally, the pipe character {\tt\pipe} can only be used inside the display verbatim {\tt\pipe\pipe...\pipe\pipe}. However, the macros |\makepipeother| and |\makepipeactive| turn the character {\tt\pipe} into a normal character and back into an active character, respectively. This allows for use of the pipe literal in horizontal mode.
+||!$@$#%^&*()-+=\ /.,;'`~th@<is$ ]\bye *is{ #a '`1\rho > *\tes<t* \undefined .??["||
+Normally, the pipe character {\tt\pipe} can only be used inside the display verbatim {\tt\pipe\pipe...\pipe\pipe}. However, the macros |\makepipeother| and |\makepipeactive| turn the character {\tt\pipe} into an innocent character and back into an active character, respectively. This allows for use of the pipe literal in horizontal mode.
 There is also the macro |\pipe| which expands to
 || macro: -> \bgroup\string|\egroup ||
 displaying the literal {\tt\pipe}. These macros can be used to, for example, execute
-|| {\tt th\pipe{}s is a pipe} ||
+||{\tt th\pipe{}s is a pipe}||
 or
 \begindisplay
 \tt
