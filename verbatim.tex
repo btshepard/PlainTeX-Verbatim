@@ -19,11 +19,11 @@
 \def\showspaces{\makeinnocent{ }}
 \newif\ifblankline
 \def\obeyblanklines{%
-    \begingroup
-    \lccode`~=`\^^M\relax
+    \begingroup%
+    \lccode`~=`\^^M\relax%
     \lowercase{\endgroup\def~}%
-    {\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}
-    \makeactive{\^^M}
+    {\endgraf\ifblankline\vskip\baselineskip\fi\blanklinetrue}%
+    \makeactive{\^^M}%
     \everypar{\blanklinefalse}%
 }
 
@@ -31,17 +31,17 @@
 \newif\ifvisiblespaces
 \makepipeactive
 \def|{%
-    \begingroup
-    \let\do\makeinnocent\dospecials
-    \ifvisiblespaces\showspaces\else\obeyspaces\fi
-    \obeylines
+    \begingroup%
+    \let\do\makeinnocent\dospecials%
+    \ifvisiblespaces\showspaces\else\obeyspaces\fi%
+    \obeylines%
     \doverbatim%
 }
 \def\doverbatim#1{%
-    \ifx|#1
-        \makepipeother\expandafter\displayverb
-    \else
-        \inlineverb#1\relax
+    \ifx|#1%
+        \makepipeother\expandafter\displayverb%
+    \else%
+        \inlineverb#1\relax%
     \fi%
 }
 
@@ -52,11 +52,11 @@
 \makepipeother
 \long\def\displayverb#1||{%
     \begindisplay
-    \obeyblanklines
-    \par\vskip-\baselineskip\relax
+    \obeyblanklines%
+    \par\vskip-\baselineskip\relax%
     \tt#1%
-    \enddisplay
-    \endgroup
+    \enddisplay%
+    \endgroup%
     \visiblespacesfalse%
 }
 \makepipeactive
@@ -106,12 +106,10 @@ There is also the macro |\pipe| which expands to
 displaying the literal {\tt\pipe}.
 These macros can be used to, for example, execute
 ||{\tt th\pipe{}s is a pipe}||
-or
+or, as an alternative,
 \begindisplay
 \tt
-\makepipeother
-\string\makepipeother\string{\string\tt\ th\string\pipe\string{\string}s is a pipe\string}\string\makepipeactive
-\makepipeactive
+\string\makepipeother\string{\string\tt\ th\string|s is a pipe\string}\string\makepipeactive
 \enddisplay
 which will each display {\tt th\pipe{}s is a pipe}.
 Of course, these macros cannot be used inside the {\tt\pipe...\pipe} or {\tt\pipe\pipe...\pipe\pipe} environments.
@@ -125,6 +123,15 @@ Code such as
 5
 6 \bye||
 will compile as expected.
-These verbatim environments also obey spaces, lines, and blank lines.
+These verbatim environments also obey spaces, lines, and blank lines; this allows for code insertion such as
+||void dfs(int p){
+    if(o[p]) return;
+    o[p]=1;
+    c[p] = t++;
+    for(int i=0; i<s[p].size(); ++i){
+        dfs(s[p][i]);
+    }
+}||
+which will also compile as expected.
 
 \bye
