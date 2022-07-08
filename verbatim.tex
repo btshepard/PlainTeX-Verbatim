@@ -16,7 +16,11 @@
 \def\pipe{\bgroup\string|\egroup}
 
 % obey spaces/lines/blank lines
-\def\showspaces{\makeinnocent{ }}
+\def\showspaces{%
+    \begingroup
+    \lccode`~=` \relax
+    \lowercase{\endgroup\obeyspaces\let~=\ \relax}%
+}
 \newif\ifblankline
 \def\obeyblanklines{%
     \begingroup%
@@ -33,7 +37,7 @@
 \def|{%
     \begingroup%
     \let\do\makeinnocent\dospecials%
-    \ifvisiblespaces\showspaces\else\obeyspaces\fi%
+    \ifvisiblespaces\else\obeyspaces\fi%
     \obeylines%
     \doverbatim%
 }
@@ -52,6 +56,7 @@
 \makepipeother
 \long\def\displayverb#1||{%
     \begindisplay
+    \showspaces
     \obeyblanklines%
     \par\vskip-\baselineskip\relax%
     \tt#1%
@@ -115,18 +120,19 @@ which will each display {\tt th\pipe{}s is a pipe}.
 Of course, these macros cannot be used inside the {\tt\pipe...\pipe} or {\tt\pipe\pipe...\pipe\pipe} environments.
 
 The character {\tt @} is able to be used regularly, and can also be used at the end of lines.
-Code such as
-||1 this is a t@st
-2 @
-3
-4 this is a test@
-5
-6 \bye||
+\TeX\ code such as
+||this is a t@st
+@
+
+this is a test@
+
+\bye||
 will compile as expected.
-These verbatim environments also obey spaces, lines, and blank lines; this allows for code insertion such as
+These verbatim environments also obey spaces, lines, and blank lines; this allows for indented code insertion such as
 ||void dfs(int p){
     if(o[p]) return;
     o[p]=1;
+    
     c[p] = t++;
     for(int i=0; i<s[p].size(); ++i){
         dfs(s[p][i]);
