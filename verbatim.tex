@@ -118,14 +118,11 @@ or, as an alternative,
 \enddisplay
 which will each display {\tt th\pipe{}s is a pipe}.
 Of course, these macros cannot be used inside the {\tt\pipe...\pipe} or {\tt\pipe\pipe...\pipe\pipe} environments.
-
-The character {\tt @} is able to be used regularly, and can also be used at the end of lines.
-\TeX\ code such as
+The character {\tt @} is able to be used normally; \TeX\ code such as
 ||this is a t@st
 @
 
 this is a test@
-
 \bye||
 will compile as expected.
 These verbatim environments also obey spaces, lines, and blank lines; this allows for indented code insertion such as
