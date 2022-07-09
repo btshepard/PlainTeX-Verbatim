@@ -88,14 +88,16 @@
 
 % \bverb...\everb and \bverbatim...\everbatim
 % as substitutes for |...| and ||...||
-\def\bverb{%
-    \begingroup
-    \makepipeother
+\let\svs\visiblespacestrue
+\def\vboiler{%
+    \begingroup%
+    \makepipeother%
     \let\do\makeinnocent\dospecials%
     \ifvisiblespaces\else\obeyspaces\fi%
     \tt%
-    \dobverb%
 }
+\def\bverb<{\vboiler\dobverb}
+\def\bverbs{\visiblespacestrue\vboiler\ \dobverbs}
 \def\bverbatim{%
     \begingroup
     \makepipeother
@@ -111,7 +113,10 @@
 \begingroup
 \catcode`\!=0
 \makeinnocent{\\}
-!gdef!dobverb#1\everb{#1!everb}
+!makeinnocent{ }
+!gdef!dobverbs #1\everbs{#1!everb}
+!obeyspaces
+!gdef!dobverb#1>\everb{#1!everb}
 !gdef!dobverbatim#1\everbatim{#1!everbatim}
 !endgroup
 \def\everb{\endgroup\visiblespacesfalse}
@@ -171,10 +176,11 @@ These verbatim environments also obey spaces, lines, and blank lines; this allow
 }||
 which will also compile as expected.
 
-As a backup (in case {\tt\pipe} is needed), the four commands |\bverb...\everb| and |\bverbatim...\everbatim| are provided as substitutes for {\tt\pipe...\pipe} and {\tt\pipe\pipe...\pipe\pipe}. However, these environments cannot be used with |@|; instead, the command |\svs| (short for |\showverbspaces|) is provided. Use this command in front of either environment for visible spaces. For example, the code
+As a backup (in case {\tt\pipe} is needed), the four commands |\bverb...\everb| and |\bverbatim...\everbatim| are provided as substitutes for {\tt\pipe...\pipe} and {\tt\pipe\pipe...\pipe\pipe}. Furthermore, the commands |\bverb| and |\bverbs| gobble the first space of their argument. However, these environments cannot be used with |@|; instead, use |\bverbs...\everbs| and |\bverbatims...\everbatims|. Use this command in front of either environment for visible spaces. For example, the code
 ||\svs\bverb this is a \test\everb||
-will display @|this is a \test|. These commands can also be used to display the {\tt\pipe} character: the code
+will display @|this is a \test|.
+These commands can also be used to display the {\tt\pipe} character: the code
 ||\bverb th|s is a pipe\everb||
-will display\bverb th|s is a pipe\everb, as expected.
+will display {\tt th\pipe s is a pipe}, as expected.
 
 \bye
