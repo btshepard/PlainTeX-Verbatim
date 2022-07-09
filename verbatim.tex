@@ -90,6 +90,7 @@
 % as substitutes for |...| and ||...||
 \def\bverb{%
     \begingroup
+    \makepipeother
     \let\do\makeinnocent\dospecials%
     \ifvisiblespaces\else\obeyspaces\fi%
     \tt%
@@ -97,6 +98,7 @@
 }
 \def\bverbatim{%
     \begingroup
+    \makepipeother
     \let\do\makeinnocent\dospecials%
     \ifvisiblespaces\else\obeyspaces\fi%
     \showspaces%
@@ -168,5 +170,11 @@ These verbatim environments also obey spaces, lines, and blank lines; this allow
     }
 }||
 which will also compile as expected.
+
+As a backup (in case {\tt\pipe} is needed), the four commands |\bverb...\everb| and |\bverbatim...\everbatim| are provided as substitutes for {\tt\pipe...\pipe} and {\tt\pipe\pipe...\pipe\pipe}. However, these environments cannot be used with |@|; instead, the command |\svs| (short for |\showverbspaces|) is provided. Use this command in front of either environment for visible spaces. For example, the code
+||\svs\bverb this is a \test\everb||
+will display @|this is a \test|. These commands can also be used to display the {\tt\pipe} character: the code
+||\bverb th|s is a pipe\everb||
+will display\bverb th|s is a pipe\everb, as expected.
 
 \bye
