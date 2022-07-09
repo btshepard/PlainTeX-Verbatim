@@ -1,3 +1,5 @@
+%%%% ------------- TEX WIZARDRY ------------ %%%%
+
 % boilerplate
 \def\gobble#1{}
 \def\makeinnocent#1{\catcode`#1=12\relax}
@@ -35,8 +37,8 @@
 \newif\ifvisiblespaces
 \makepipeactive
 \def|{%
-    \begingroup%
-    \let\do\makeinnocent\dospecials%
+    \begingroup
+    \let\do\makeinnocent\dospecials
     \ifvisiblespaces\else\obeyspaces\fi%
     \obeylines%
     \doverbatim%
@@ -84,12 +86,42 @@
 }
 \endgroup
 
-% usage comments
+% \bverb...\everb and \bverbatim...\everbatim
+% as substitutes for |...| and ||...||
+\def\bverb{%
+    \begingroup
+    \let\do\makeinnocent\dospecials%
+    \ifvisiblespaces\else\obeyspaces\fi%
+    \tt%
+    \dobverb%
+}
+\def\bverbatim{%
+    \begingroup
+    \let\do\makeinnocent\dospecials%
+    \ifvisiblespaces\else\obeyspaces\fi%
+    \showspaces%
+    \obeyblanklines%
+    \par\vskip-\baselineskip\relax%
+    \begindisplay%
+    \tt%
+    \dobverbatim%
+}
+\begingroup
+\catcode`\!=0
+\makeinnocent{\\}
+!gdef!dobverb#1\everb{#1!everb}
+!gdef!dobverbatim#1\everbatim{#1!everbatim}
+!endgroup
+\def\everb{\endgroup\visiblespacesfalse}
+\def\everbatim{\enddisplay\endgroup\visiblespacesfalse}
+
+%%%% ---------- COMMENTS AND USAGE --------- %%%%
+
 \centerline{\font\large=cmr10 at 18pt \large Plain\TeX\ Verbatim}
 \vskip1.5\baselineskip{}
 \centerline{Benjamin T. Shepard}
 \vskip1ex{}
-\centerline{July 1, 2022}
+\centerline{July 9, 2022}
 \vskip1.5\baselineskip{}
 \openup0.4ex{}
 
@@ -130,7 +162,7 @@ These verbatim environments also obey spaces, lines, and blank lines; this allow
     if(o[p]) return;
     o[p]=1;
     
-    c[p] = t++;
+    c[p]=t++;
     for(int i=0; i<s[p].size(); ++i){
         dfs(s[p][i]);
     }
