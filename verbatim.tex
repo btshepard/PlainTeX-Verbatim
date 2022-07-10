@@ -96,7 +96,7 @@
     \ifvisiblespaces\else\obeyspaces\fi%
     \tt%
 }
-\def\bverb<{\vboiler\dobverb}
+\def\bverb{\vboiler\dobverb}
 \def\bverbs{\visiblespacestrue\vboiler\ \dobverbs}
 \def\bverbatim{%
     \begingroup
@@ -116,7 +116,7 @@
 !makeinnocent{ }
 !gdef!dobverbs #1\everbs{#1!everb}
 !obeyspaces
-!gdef!dobverb#1>\everb{#1!everb}
+!gdef!dobverb#1\everb{#1!everb}
 !gdef!dobverbatim#1\everbatim{#1!everbatim}
 !endgroup
 \def\everb{\endgroup\visiblespacesfalse}
@@ -143,28 +143,26 @@ If visible spaces are desired, use {\tt @\pipe\pipe...\pipe\pipe} instead, which
 Every normal \TeX\ character (except {\tt\pipe}) as well as all of the special characters can be used inside this environment, as shown in the following example:
 ||!$@$#%^&*()-+=\ /.,;'`~th@<is$ ]\bye *is{ #a '`1\rho > *\tes<t* \undefined .??["||
 Normally, the pipe character {\tt\pipe} can only be used inside the display verbatim {\tt\pipe\pipe...\pipe\pipe}.
-However, the macros |\makepipeother| and |\makepipeactive| turn the character {\tt\pipe} into an innocent character and back into an active character, respectively.
-This allows for use of the pipe literal in horizontal mode.
-There is also the macro |\pipe| which expands to
-|| \bgroup\string|\egroup ||
-displaying the literal {\tt\pipe}.
-These macros can be used to, for example, execute
+However, the macros |\makepipeother| and |\makepipeactive| turn the character {\tt\pipe} into an innocent character and into an active character, respectively.
+There is also the macro |\pipe| which expands to {\tt\string\bgroup\string\string\pipe\string\egroup}.
+These commands allow for use of the pipe literal {\tt\pipe} in horizontal mode. For example, both
 ||{\tt th\pipe{}s is a pipe}||
-or, as an alternative,
+and
 \begindisplay
 \tt
 \string\makepipeother\string{\string\tt\ th\string|s is a pipe\string}\string\makepipeactive
 \enddisplay
-which will each display {\tt th\pipe{}s is a pipe}.
+will display {\tt th\pipe{}s is a pipe}.
 Of course, these macros cannot be used inside the {\tt\pipe...\pipe} or {\tt\pipe\pipe...\pipe\pipe} environments.
-The character {\tt @} is able to be used normally; \TeX\ code such as
-||this is a t@st
-@
+In contrast, the character {\tt @} is able to be used normally, provided that it is not proceeded by the pipe character; \TeX\ will recognize the sequence {\tt @\pipe} as the beginning of a verbatim.
+%  \TeX\ code such as
+% ||this is a t@st
+% @
 
-this is a test@
-\bye||
-will compile as expected.
-These verbatim environments also obey spaces, lines, and blank lines; this allows for indented code insertion such as
+% this is a test@
+% \bye||
+% will compile as expected.
+These verbatim environments obey spaces, lines, and blank lines; this allows for code insertion such as
 ||void dfs(int p){
     if(o[p]) return;
     o[p]=1;
@@ -174,13 +172,15 @@ These verbatim environments also obey spaces, lines, and blank lines; this allow
         dfs(s[p][i]);
     }
 }||
-which will also compile as expected.
+which will compile as expected.
 
 As a backup (in case {\tt\pipe} is needed), the four commands |\bverb...\everb| and |\bverbatim...\everbatim| are provided as substitutes for {\tt\pipe...\pipe} and {\tt\pipe\pipe...\pipe\pipe}. Furthermore, the commands |\bverb| and |\bverbs| gobble the first space of their argument. However, these environments cannot be used with |@|; instead, use |\bverbs...\everbs| and |\bverbatims...\everbatims|. Use this command in front of either environment for visible spaces. For example, the code
 ||\svs\bverb this is a \test\everb||
 will display @|this is a \test|.
 These commands can also be used to display the {\tt\pipe} character: the code
 ||\bverb th|s is a pipe\everb||
-will display {\tt th\pipe s is a pipe}, as expected.
+will display {\tt th\pipe s is a pipe}, as expected. When the |\bverb| macro is executed, \TeX\ turns every available character innocent until it scans the exact sequence |\everb|.
+
+\bverb laksdjflaksdjflkdsjf fthis is \undefined \bye sdflkjdf\ev@erb. \everb
 
 \bye
