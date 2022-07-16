@@ -39,7 +39,7 @@
 \def|{%
     \begingroup
     \let\do\makeinnocent\dospecials
-    \ifvisiblespaces\else\obeyspaces\fi%
+    \unless\ifvisiblespaces\obeyspaces\fi%
     \obeylines%
     \doverbatim%
 }
@@ -93,7 +93,7 @@
     \begingroup%
     \makepipeother%
     \let\do\makeinnocent\dospecials%
-    \ifvisiblespaces\else\obeyspaces\fi%
+    \unless\ifvisiblespaces\obeyspaces\fi%
     \tt%
 }
 \def\bverb{\vboiler\dobverb}
@@ -102,7 +102,7 @@
     \begingroup
     \makepipeother
     \let\do\makeinnocent\dospecials%
-    \ifvisiblespaces\else\obeyspaces\fi%
+    \unless\ifvisiblespaces\obeyspaces\fi%
     \showspaces%
     \obeyblanklines%
     \par\vskip-\baselineskip\relax%
@@ -171,6 +171,7 @@ These verbatim environments obey spaces, lines, and blank lines; this allows for
     for(int i=0; i<s[p].size(); ++i){
         dfs(s[p][i]);
     }
+    Oops, the very long line of code is here, it does not fit into the line width unfortunately.
 }||
 which will compile as expected.
 
