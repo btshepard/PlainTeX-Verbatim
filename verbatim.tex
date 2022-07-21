@@ -2,18 +2,16 @@
 
 % boilerplate
 \def\gobble#1{}
-\def\makeinnocent#1{\catcode`#1=12\relax}
+\def\makeletter#1{\catcode`#1=11\relax}
+\def\makeother#1{\catcode`#1=12\relax}
 \def\makeactive#1{\catcode`#1=13\relax}
 
 % display environment
-\def\begindisplay{\begingroup\par\ \par\hfil}
-\def\enddisplay{\hfil\par\ \par\endgroup}
-
-% \def\begindisplay{\par\ \par\begingroup\leftskip=0pt plus 1fil\rightskip=\leftskip\parindent=0pt\parfillskip=0pt}
-% \def\enddisplay{\par\ \par\endgroup}
+\def\begindisplay{\begingroup\vskip\baselineskip}
+\def\enddisplay{\vskip\baselineskip\endgroup}
 
 % safety macros
-\def\makepipeother{\makeinnocent{|}}
+\def\makepipeother{\makeother{|}}
 \def\makepipeactive{\makeactive{|}}
 \def\pipe{\bgroup\string|\egroup}
 
@@ -37,11 +35,15 @@
 \newif\ifvisiblespaces
 \makepipeactive
 \def|{%
-    \begingroup
-    \let\do\makeinnocent\dospecials
-    \unless\ifvisiblespaces\obeyspaces\fi%
-    \obeylines%
-    \doverbatim%
+    \ifmmode%
+        \char`|\makepipeother%
+    \else%
+        \begingroup%
+        \let\do\makeother\dospecials%
+        \unless\ifvisiblespaces\obeyspaces\fi%
+        \obeylines%
+        \expandafter\doverbatim%
+    \fi%
 }
 \def\doverbatim#1{%
     \ifx|#1%
@@ -57,10 +59,9 @@
 % ||...|| environment
 \makepipeother
 \long\def\displayverb#1||{%
-    \begindisplay
-    \showspaces
+    \begindisplay%
+    \showspaces%
     \obeyblanklines%
-    \par\vskip-\baselineskip\relax%
     \tt#1%
     \enddisplay%
     \endgroup%
@@ -74,14 +75,14 @@
 \begingroup
 \gdef @{\futurelet\nextchar\doat}
 \gdef\doat{%
-    \ifx\^^M\nextchar
+    \ifx\^^M\nextchar%
         \expandafter\gobble%
-    \else
-        \ifx|\nextchar
+    \else%
+        \ifx|\nextchar%
             \expandafter\visiblespacestrue%
-        \else
-            \atchar
-        \fi
+        \else%
+            \atchar%
+        \fi%
     \fi%
 }
 \endgroup
@@ -92,7 +93,7 @@
 \def\vboiler{%
     \begingroup%
     \makepipeother%
-    \let\do\makeinnocent\dospecials%
+    \let\do\makeother\dospecials%
     \unless\ifvisiblespaces\obeyspaces\fi%
     \tt%
 }
@@ -101,7 +102,7 @@
 \def\bverbatim{%
     \begingroup
     \makepipeother
-    \let\do\makeinnocent\dospecials%
+    \let\do\makeother\dospecials%
     \unless\ifvisiblespaces\obeyspaces\fi%
     \showspaces%
     \obeyblanklines%
@@ -112,8 +113,8 @@
 }
 \begingroup
 \catcode`\!=0
-\makeinnocent{\\}
-!makeinnocent{ }
+\makeother{\\}
+!makeother{ }
 !gdef!dobverbs #1\everbs{#1!everb}
 !obeyspaces
 !gdef!dobverb#1\everb{#1!everb}
@@ -171,9 +172,10 @@ These verbatim environments obey spaces, lines, and blank lines; this allows for
     for(int i=0; i<s[p].size(); ++i){
         dfs(s[p][i]);
     }
-    Oops, the very long line of code is here, it does not fit into the line width unfortunately.
 }||
 which will compile as expected.
+
+||Oops, the very long line of code is here, it does not fit into the line width unfortunately.||
 
 As a backup (in case {\tt\pipe} is needed), the four commands |\bverb...\everb| and |\bverbatim...\everbatim| are provided as substitutes for {\tt\pipe...\pipe} and {\tt\pipe\pipe...\pipe\pipe}. Furthermore, the commands |\bverb| and |\bverbs| gobble the first space of their argument. However, these environments cannot be used with |@|; instead, use |\bverbs...\everbs| and |\bverbatims...\everbatims|. Use this command in front of either environment for visible spaces. For example, the code
 ||\svs\bverb this is a \test\everb||
