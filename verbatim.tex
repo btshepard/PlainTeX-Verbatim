@@ -15,6 +15,8 @@
 \makeother{@}
 \newdimen\verblen
 \newdimen\verbtw
+\newdimen\mynegw\settowidth\mynegw{ }
+\def\negspace{\hskip-\mynegw\relax}
 
 % display environment
 \def\begindisplay{\begingroup\vskip\baselineskip}
@@ -111,7 +113,7 @@
     \let\do\makeother\dospecials%
     \ifnot\ifvisiblespaces\obeyspaces\fi%
     \tt%
-    \dobverb%
+    \negspace\negthinspace\dobverb%
 }
 \def\bverbs{
     \visiblespacestrue%
@@ -120,7 +122,7 @@
     \let\do\makeother\dospecials%
     \ifnot\ifvisiblespaces\obeyspaces\fi%
     \tt%
-    \negthinspace\dobverbs%
+    \negspace\dobverbs%
 }
 \def\bverbatim{%
     \begingroup
@@ -131,7 +133,7 @@
     \obeyblanklines%
     \par\vskip-\baselineskip\relax%
     \begindisplay%
-    \tt%
+    \negspace\negthinspace\tt%
     \dobverbatim%
 }
 \begingroup
@@ -205,6 +207,16 @@ As a backup (in case {\tt\pipe} is needed), the four commands |\bverb...\everb| 
 will display \bverbs this is a \test\everbs.
 These commands can also be used to display the {\tt\pipe} character: the code
 ||\bverb th|s is a pipe\everb||
-will display {\tt th\pipe s is a pipe}, as expected. When the |\bverb| macro is executed, \TeX\ turns every available character innocent until it scans the exact sequence |\everb|.
+will display \bverb th|s is a pipe\everb, as expected. When the |\bverb| macro is executed, \TeX\ turns every available character innocent until it scans the exact sequence |\everb|.
+
+asdfasdfadsf
+\bverbatim asdf\everbatim
+asdfasdfadf
+
+asdfasdfadsf
+\bverbatim
+asdf
+\everbatim
+asdfasdfadf
 
 \bye
