@@ -1,10 +1,20 @@
-%%% ============== TEX WIZARDRY ============= %%%
+%%%% ============= TEX WIZARDRY ============ %%%%
 
 % boilerplate
-\def\gobble#1{}
+\long\def\gobble#1{}
+\long\def\firstofone#1{#1}
 \def\makeletter#1{\catcode`#1=11\relax}
 \def\makeother#1{\catcode`#1=12\relax}
 \def\makeactive#1{\catcode`#1=13\relax}
+\def\ifnot#1{#1\else\expandafter\expandafter\fi\iffalse\iftrue\fi}
+
+% display-verbatim boxes and lengths
+\makeletter{@}
+\newbox\tb@x
+\def\settowidth#1#2{\setbox\tb@x\hbox{{#2}}#1\wd\tb@x\setbox\tb@x\box\voidb@x}
+\makeother{@}
+\newdimen\verblen
+\newdimen\verbtw
 
 % display environment
 \def\begindisplay{\begingroup\vskip\baselineskip}
@@ -17,8 +27,8 @@
 
 % obey spaces/lines/blank lines
 \def\showspaces{%
-    \begingroup
-    \lccode`~=` \relax
+    \begingroup%
+    \lccode`~=` \relax%
     \lowercase{\endgroup\obeyspaces\let~=\ \relax}%
 }
 \newif\ifblankline
@@ -40,32 +50,38 @@
     \else%
         \begingroup%
         \let\do\makeother\dospecials%
-        \unless\ifvisiblespaces\obeyspaces\fi%
+        \ifnot\ifvisiblespaces\obeyspaces\fi%
         \obeylines%
-        \expandafter\doverbatim%
+        \expandafter\dopipe%
     \fi%
 }
-\def\doverbatim#1{%
+\def\dopipe#1{%
     \ifx|#1%
-        \makepipeother\expandafter\displayverb%
+        \makepipeother\expandafter\displaypipe%
     \else%
-        \inlineverb#1\relax%
+        \inlinepipe#1\relax%
     \fi%
 }
 
 % |...| environment
-\long\def\inlineverb#1|{\tt#1\endgroup\visiblespacesfalse}
+\long\def\inlinepipe#1|{\tt#1\endgroup\visiblespacesfalse}
 
 % ||...|| environment
 \makepipeother
-\long\def\displayverb#1||{%
-    \begindisplay%
+\long\def\displaypipe#1||{%
+    \settowidth\verblen{#1}
+    \verbtw=\hsize
+    \advance\verbtw by -\verblen
+    \divide\verbtw by 2
+    \parindent=\verbtw
+    \vskip\baselineskip%
     \showspaces%
     \obeyblanklines%
     \tt#1%
-    \enddisplay%
+    \vskip\baselineskip%
     \endgroup%
     \visiblespacesfalse%
+    \noindent\firstofone%
 }
 \makepipeactive
 
@@ -73,12 +89,12 @@
 \def\atchar{\char`\@\relax}
 \makeactive{@}
 \begingroup
-\gdef @{\futurelet\nextchar\doat}
+\gdef @{\futurelet\next\doat}
 \gdef\doat{%
-    \ifx\^^M\nextchar%
+    \ifx\^^M\next%
         \expandafter\gobble%
     \else%
-        \ifx|\nextchar%
+        \ifx|\next%
             \expandafter\visiblespacestrue%
         \else%
             \atchar%
@@ -89,21 +105,28 @@
 
 % \bverb...\everb and \bverbatim...\everbatim
 % as substitutes for |...| and ||...||
-\let\svs\visiblespacestrue
-\def\vboiler{%
+\def\bverb{%
     \begingroup%
     \makepipeother%
     \let\do\makeother\dospecials%
-    \unless\ifvisiblespaces\obeyspaces\fi%
+    \ifnot\ifvisiblespaces\obeyspaces\fi%
     \tt%
+    \dobverb%
 }
-\def\bverb{\vboiler\dobverb}
-\def\bverbs{\visiblespacestrue\vboiler\ \dobverbs}
+\def\bverbs{
+    \visiblespacestrue%
+    \begingroup%
+    \makepipeother%
+    \let\do\makeother\dospecials%
+    \ifnot\ifvisiblespaces\obeyspaces\fi%
+    \tt%
+    \negthinspace\dobverbs%
+}
 \def\bverbatim{%
     \begingroup
     \makepipeother
     \let\do\makeother\dospecials%
-    \unless\ifvisiblespaces\obeyspaces\fi%
+    \ifnot\ifvisiblespaces\obeyspaces\fi%
     \showspaces%
     \obeyblanklines%
     \par\vskip-\baselineskip\relax%
@@ -123,7 +146,7 @@
 \def\everb{\endgroup\visiblespacesfalse}
 \def\everbatim{\enddisplay\endgroup\visiblespacesfalse}
 
-%%% ========== COMMENTS AND USAGE =========== %%%
+%%%% ========= COMMENTS AND USAGE ========== %%%%
 
 \centerline{\font\large=cmr10 at 18pt \large Plain\TeX\ Verbatim}
 \vskip1.5\baselineskip{}
@@ -155,7 +178,7 @@ and
 \enddisplay
 will display {\tt th\pipe{}s is a pipe}.
 Of course, these macros cannot be used inside the {\tt\pipe...\pipe} or {\tt\pipe\pipe...\pipe\pipe} environments.
-In contrast, the character {\tt @} is able to be used normally, provided that it is not proceeded by the pipe character; \TeX\ will recognize the sequence {\tt @\pipe} as the beginning of a verbatim.
+In contrast, the character {\tt @} is able to be used normally, provided that it is not proceeded by the pipe character; \TeX\ will recognize the sequence {\tt @\pipe} as the beginning of a verbatim environment.
 %  \TeX\ code such as
 % ||this is a t@st
 % @
@@ -178,12 +201,10 @@ which will compile as expected.
 ||Oops, the very long line of code is here, it does not fit into the line width unfortunately.||
 
 As a backup (in case {\tt\pipe} is needed), the four commands |\bverb...\everb| and |\bverbatim...\everbatim| are provided as substitutes for {\tt\pipe...\pipe} and {\tt\pipe\pipe...\pipe\pipe}. Furthermore, the commands |\bverb| and |\bverbs| gobble the first space of their argument. However, these environments cannot be used with |@|; instead, use |\bverbs...\everbs| and |\bverbatims...\everbatims|. Use this command in front of either environment for visible spaces. For example, the code
-||\svs\bverb this is a \test\everb||
-will display @|this is a \test|.
+||\bverbs this is a \test\everbs||
+will display \bverbs this is a \test\everbs.
 These commands can also be used to display the {\tt\pipe} character: the code
 ||\bverb th|s is a pipe\everb||
 will display {\tt th\pipe s is a pipe}, as expected. When the |\bverb| macro is executed, \TeX\ turns every available character innocent until it scans the exact sequence |\everb|.
-
-\bverb laksdjflaksdjflkdsjf fthis is \undefined \bye sdflkjdf\ev@erb. \everb
 
 \bye
